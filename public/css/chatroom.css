@@ -1,0 +1,86 @@
+@font-face {
+    font-family: 'prompt-md';
+    src: url('../fonts/Prompt/Prompt-Medium.ttf');
+}
+
+body {
+    font-family: 'prompt-md', sans-serif;
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.navbar-toggler-icon {
+    font-size: 0.5rem;
+}
+
+.navbar-toggler:focus {
+    box-shadow: none;
+}
+
+
+.dropdown img {
+    max-width: 32px;
+    width: 32px;
+    border-radius: 50px;
+    object-position: center;
+    object-fit: cover;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 56px);
+}
+
+.message-container {
+    width: 100%;
+    height: 100%;
+    background-color: #f1f1f1;
+    margin: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 0 0.5rem;
+}
+
+.message-box {
+    padding: 0.5rem 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.message-box .displayname {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.message-box .content {
+    position: relative;
+    padding: 0.25rem 0.5rem;
+    background-color: #dddddd80;
+    border-radius: 12px;
+}
+
+.message-box .content .message {
+    display: block;
+}
+
+.message-box .content .time {
+    display: block;
+    position: absolute;
+    bottom: -15px;
+    font-size: 10px;
+}
+
+.message-box.self .displayname {
+    display: none;
+}
+
+.message-box.self .content {
+    text-align: end;
+    background-color: #d4f4ff80;
+}
+
+.message-box.self .content .time {
+    right: 0px;
+}

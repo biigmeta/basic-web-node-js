@@ -1,0 +1,32 @@
+@font-face {
+    font-family: 'prompt-md';
+    src: url('../fonts/Prompt/Prompt-Medium.ttf');
+}
+
+body {
+    font-family: 'prompt-md', sans-serif;
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.navbar-toggler:focus {
+    box-shadow: none;
+}
+
+.navbar-toggler-icon {
+    font-size: 0.5rem;
+}
+
+.dropdown img {
+    max-width: 32px;
+    width: 32px;
+    border-radius: 50px;
+    object-position: center;
+    object-fit: cover;
+}
+
+.wrapper {
+    height: 100%;
+}
