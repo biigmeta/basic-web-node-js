@@ -77,7 +77,7 @@ function randomNumber(length) {
     return result;
 }
 
-function thaiDate(date, dateStyle = null) {
+function thaiDateFormat(date, dateStyle = null) {
 
     var d = new Date(date);
     var style = dateStyle == null ? "long" : dateStyle;

@@ -12,6 +12,10 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + "/public/index.html")
 })
 
+app.get('/chatlobby', (req, res) => {
+    res.sendFile(__dirname + "/public/chatlobby.html")
+})
+
 app.get('/chatroom', (req, res) => {
     res.sendFile(__dirname + "/public/chatroom.html")
 })
