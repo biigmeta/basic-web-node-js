@@ -57,7 +57,9 @@
     </nav>
     <div class="wrapper">
         <div class="container">
-            <h1 class="text-center">I AM INDEX HTML</h1>
+            <card class="card-body">
+                <h1 class="text-center">I AM INDEX HTML</h1>
+            </card>
         </div>
     </div>
 
@@ -78,6 +80,14 @@
     <script>
         $(() => {
             console.log("ready")
+            $.ajax({
+                method: 'get',
+                url: 'https://randomuser.me/api/?results=200',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                }
+            });
         })
     </script>
 </body>
