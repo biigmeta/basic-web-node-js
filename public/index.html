@@ -77,17 +77,19 @@
 
     <script src="/socket.io/socket.io.js"></script>
 
+    <!-- custom javascript -->
+    <script src="js/user.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/database.js"></script>
+
+
     <script>
+
+        var user = new User()
+
         $(() => {
-            console.log("ready")
-            $.ajax({
-                method: 'get',
-                url: 'https://randomuser.me/api/?results=200',
-                dataType: 'json',
-                success: function (data) {
-                    console.log(data);
-                }
-            });
+            console.log(zeroPad(5, 10))
+            console.log(user.isLogIn())
         })
     </script>
 </body>

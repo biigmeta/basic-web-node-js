@@ -77,7 +77,7 @@ function randomNumber(length) {
     return result;
 }
 
-function thaiDateFormat(date, dateStyle = null) {
+function thaiDate(date, dateStyle = null) {
 
     var d = new Date(date);
     var style = dateStyle == null ? "long" : dateStyle;
@@ -123,7 +123,7 @@ Number.prototype.format = function (n, x) {
     return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$1,');
 };
 
-function currencyFormat(number, decimalCount = 2) {
+function currency(number, decimalCount = 2) {
     return parseFloat(number).format(decimalCount);
 }
 
@@ -197,63 +197,5 @@ function b64toBlob(image64, sliceSize) {
         type: contentType
     });
     return blob;
-}
-
-////////////////////////////////////////////////////////////////
-///////////////////// AUTHENTICATION / USER ////////////////////
-////////////////////////////////////////////////////////////////
-
-const tokenKey = "SATELLITEHOLO_TOKEN";
-const cookieKey = "SATELLITEHOLO_COOKIE";
-
-
-function isLoggedIn() {
-    if (getToken() != "" && getToken() != null) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-function setToken(_token) {
-    try {
-        token = _token;
-        localStorage.setItem(tokenKey, token);
-        return token;
-    } catch {
-        return false;
-    }
-}
-
-function getToken() {
-    try {
-        return localStorage.getItem(tokenKey);
-    } catch (e) {
-        return false;
-    }
-}
-
-function clearToken() {
-    localStorage.removeItem(tokenKey);
-    token = "";
-}
-
-function acceptCookie() {
-    localStorage.setItem(cookieKey, "true");
-}
-
-function cookieAccepted() {
-    try {
-        if (localStorage.getItem(cookieKey) == "true") {
-            return true;
-        }
-        return false;
-    } catch (e) {
-        return false;
-    }
-}
-
-function clearCookie() {
-    localStorage.removeItem(cookieKey);
 }
 
