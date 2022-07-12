@@ -1,27 +1,22 @@
-const apiService = "https://www.gforcesolution.com/app/satelliteholo/api/v1/index.php";
+const apiService = "";
 
 class Database {
 
     httpRequest(method, route, body = null) {
         return new Promise(function (resolve, reject) {
-
             var xhr = new XMLHttpRequest();
-
             xhr.open(method, apiService + route, true);
             xhr.setRequestHeader('Content-type', 'application/json');
 
             xhr.onload = function () {
-                // Request finished. Do processing here.
-                if (isJsonStructure(this.responseText)) {
+                try {
                     resolve(JSON.parse(this.responseText));
-                } else {
-                    reject(Error("Structure Error."));
+                } catch (e) {
+                    reject(Error(e));
                 }
             };
 
             xhr.onerror = function () {
-                console.log(this.status);
-                console.log(this.statusText);
                 reject(Error("Request Error."));
             }
 
@@ -30,7 +25,6 @@ class Database {
     }
 
     upload(route, file, name) {
-
         return new Promise(function (resolve, reject) {
             var formData = new FormData();
 

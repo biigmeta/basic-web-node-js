@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/css/register.css">
+    <style>
+        .register-container {
+            display: flex;
+            flex-direction: row;
+            align-self: center;
+            border-radius: 12px;
+            box-shadow: 1px 1px 10px #000000;
+            background: white;
+        }
+
+        .banner-container {
+            width: 50%;
+        }
+
+        .banner-container img {
+            border-radius: 12px 0px 0px 12px;
+            object-fit: cover;
+            height: 100%;
+        }
+
+        .input-container {
+            width: 50%;
+            height: 100%;
+            padding: 1rem;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .optional::after {
+            content: ' (optional) ';
+            font-size: .875em;
+            color: #6c757d;
+        }
+
+        .or-line {
+            text-align: center;
+            position: relative;
+        }
+
+        .or-line::after {
+            content: "";
+            position: absolute;
+            border-top: solid 1px #6c757d;
+            width: 40%;
+            height: auto;
+            right: 0;
+            top: 50%;
+        }
+
+        .or-line::before {
+            content: "";
+            position: absolute;
+            border-top: solid 1px #6c757d;
+            width: 40%;
+            height: auto;
+            left: 0;
+            top: 50%;
+        }
+
+        @media screen and (max-width:996px) {
+            .register-container {
+                flex-direction: column;
+            }
+
+            .banner-container {
+                display: none;
+            }
+
+            .input-container {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <div class="register-container w-75 h-75">
+            <div class="banner-container h-100">
+                <img src="https://images.unsplash.com/photo-1535223289827-42f1e9919769?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
+                    alt="Banner Image" class="w-100">
+            </div>
+            <div class="input-container h-100">
+                <h5 class="text-center">Registration</h5>
+                <hr>
+                <form action="#" onsubmit="return false" class="mb-3" id="register-form">
+                    <div class="mb-3">
+                        <label for="email" class="">Email address</label>
+                        <input type="email" class="form-control form-control-sm" id="email"
+                            aria-describedby="email-help" required>
+                        <div id="email-help" class="form-text">We'll never share your email with anyone else.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="">Password</label>
+                        <input type="password" class="form-control form-control-sm" id="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirm-password" class="">Confirm Password</label>
+                        <input type="password" class="form-control form-control-sm" id="confirm-password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="firstname" class="">First Name</label>
+                        <input type="text" class="form-control form-control-sm" id="firstname" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastname" class="">Last Name</label>
+                        <input type="text" class="form-control form-control-sm" id="lastname" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="optional">Phone</label>
+                        <input type="text" class="form-control form-control-sm" id="phone">
+                        <small class="form-text">(Ex: 0888888888)</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="">Gender</label>
+                        <select name="" id="gender" class="form-control form-control-sm" required>
+                            <option value="" disabled selected>Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="not-applicable">Not applicable</option>
+                        </select>
+                    </div>
+                    <div class="mb-5 form-check">
+                        <input type="checkbox" class="form-check-input" id="terms-and-conditions" required>
+                        <label class="form-check-label" for="terms-and-conditions">
+                            I am 13 years of age or older and agree to the terms and conditions
+                            <span><a href="#">Terms And Conditions</a></span>
+                        </label>
+
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm w-100">Register</button>
+                </form>
+                <div class="or-line mb-3 d-none">or</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+
+    <!-- sweet alert -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/database.js"></script>
+
+    <script>
+
+        var database = new Database()
+
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelector("#register-form").addEventListener("submit", register)
+        })
+
+        async function register(event) {
+            event.preventDefault()
+
+            let email = document.querySelector("#email").value
+            let password = document.querySelector("#password").value
+            let confirm_password = document.querySelector("#confirm-password").value
+            let firstname = document.querySelector("#firstname").value
+            let lastname = document.querySelector("#lastname").value
+            let phone = document.querySelector("#phone").value
+            let gender = document.querySelector("#gender").value
+
+
+            let form = {
+                "email": email,
+                "password": password,
+                "firstname": firstname,
+                "lastname": lastname,
+                "phone": phone,
+                "gender": gender,
+                "picture": ""
+            }
+
+
+            let res = await database.httpRequest("POST", "/register", form)
+            console.log(res)
+
+            // postData('/register', form)
+            //     .then(data => {
+            //         console.log(data); // JSON data parsed by `data.json()` call
+            //     });
+
+            return false
+        }
+
+        async function postData(url = '', data = {}) {
+            const response = await fetch(url, {
+                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                mode: 'cors', // no-cors, *cors, same-origin
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: 'same-origin', // include, *same-origin, omit
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                redirect: 'follow', // manual, *follow, error
+                referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                body: JSON.stringify(data) // body data type must match "Content-Type" header
+            });
+            return response.json(); // parses JSON response into native JavaScript objects
+        }
+    </script>
+</body>
+
+</html>

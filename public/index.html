@@ -30,7 +30,7 @@
                         <a class="nav-link active" aria-current="page" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/chatroom">Chatroom</a>
+                        <a class="nav-link" href="/chat/room">Chatroom</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Game</a>
@@ -57,9 +57,17 @@
     </nav>
     <div class="wrapper">
         <div class="container">
-            <card class="card-body">
-                <h1 class="text-center">I AM INDEX HTML</h1>
-            </card>
+            <div class="card">
+                <div class="card-header">
+                    API ROUTE TESTING
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for=""></label>
+                        <button class="btn btn-primary" onclick="register()">REGISTER</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -86,11 +94,38 @@
     <script>
 
         var user = new User()
+        var users = []
 
         $(() => {
-            console.log(zeroPad(5, 10))
-            console.log(user.isLogIn())
+            $.ajax({
+                url: 'https://randomuser.me/api/?results=50',
+                dataType: 'json',
+                success: function (data) {
+                    users = data.results
+                }
+            });
         })
+
+        async function register() {
+            let random = Math.floor(Math.random() * 50)
+
+            let form = {
+                "email": users[random]['email'],
+                "username": users[random]['login']['username'],
+                "password": "123456",
+                "firstname": users[random]['name']['first'],
+                "lastname": users[random]['name']['last'],
+                "picture": users[random]['picture']['large'],
+                "gender": users[random]['gender'],
+                "phone": users[random]['phone']
+            }
+
+            $.post("/register", form, function (res) {
+                console.log(res)
+            })
+        }
+
+
     </script>
 </body>
 
