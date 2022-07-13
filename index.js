@@ -114,7 +114,16 @@ app.post('/me', (req, res, next) => {
         }
 
         let data = payload['data']
-        res.json({ "status": "success", "message": "get self data successfully.", "data": data })
+        let user_id = data['id']
+        
+        let sql = `SELECT * FROM users WHERE id = ?`
+        let values = [user_id]
+        
+        con.query(sql, values, (err, result) => { 
+            res.json({ "status": "success", "message": "get self data successfully.", "data": result[0]})
+        })
+
+        
 
     } catch (err) {
         res.json({ status: "error", messege: err.message })
@@ -184,24 +193,26 @@ let users = []
 let rooms = []
 
 io.on('connection', (client) => {
+
     console.log(client.id + " connected");
 
-    client.on("init_id", (id) => {
-        client.id = id
-    })
-
     // join channel
-    client.on("subscribe", (channel) => {
+    client.on("subscribe", (user, channel) => {
+
         client.join(channel)
 
         // check room exist
         let r = rooms.find(item => item.channel == channel)
+
         if (r != undefined) {
-            // join the room
+
             // check user already join
-            if(!r.clients.includes(client.id)){
-                r.clients.push(client.id)
+            if (r.clients.find(item => item.uuid == user.uuid) == undefined) {
+                r.clients.push(user)
             }
+
+            // send broadcast number of users in this channel
+            io.in(channel).emit('online_users', r.clients.length);
 
             console.log("client id: " + client.id + " join the channel: " + channel)
 
@@ -211,16 +222,18 @@ io.on('connection', (client) => {
             let newroom = {
                 "id": room_id,
                 "channel": channel,
+                "name": channel,
                 "clients": []
             }
 
-            newroom.clients.push(client.id)
+            newroom.clients.push(user)
             rooms.push(newroom)
+
+            // send number of users in this channel to client who create the channel
+            client.emit('online_users', 1);
 
             console.log("client id: " + client.id + " create the room: " + channel)
         }
-
-        io.sockets.in(channel).emit('broadcast_message', 'cool game');
     })
 
     // leave channel
