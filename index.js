@@ -16,11 +16,10 @@ const jwt = require("jsonwebtoken")
 const secret = "basic-web"
 
 
-app.use(cors())
+// app.use(cors())
 app.use(express.static(__dirname + '/public'))
 app.use(bodyParser.urlencoded({ extended: true })) // to support URL-encoded bodies
 app.use(express.json()) //to support JSON-encoded bodies
-
 
 
 // ## create database connection ## //
@@ -192,11 +191,11 @@ io.on('connection', (client) => {
     })
 
     // join channel
-    client.on("subscribe", (room) => {
-        client.join(room)
+    client.on("subscribe", (channel) => {
+        client.join(channel)
 
         // check room exist
-        let r = rooms.find(item => item.name == room)
+        let r = rooms.find(item => item.channel == channel)
         if (r != undefined) {
             // join the room
             // check user already join
@@ -204,22 +203,24 @@ io.on('connection', (client) => {
                 r.clients.push(client.id)
             }
 
-            console.log("client id: " + client.id + " join the room: " + room)
+            console.log("client id: " + client.id + " join the channel: " + channel)
+
         } else {
             // create room and join the room
             let room_id = uuid.v4()
             let newroom = {
                 "id": room_id,
-                "name": room,
+                "channel": channel,
                 "clients": []
             }
+
             newroom.clients.push(client.id)
             rooms.push(newroom)
 
-            console.log("client id: " + client.id + " create the room: " + room)
+            console.log("client id: " + client.id + " create the room: " + channel)
         }
 
-
+        io.sockets.in(channel).emit('broadcast_message', 'cool game');
     })
 
     // leave channel
@@ -292,7 +293,7 @@ io.on('connection', (client) => {
 
 
 // ## start server ## //
-var port = process.env.port || 3000
+var port = process.env.port || 3001
 http.listen(port, function () {
     console.log(`start server on port ${port}`)
 })
