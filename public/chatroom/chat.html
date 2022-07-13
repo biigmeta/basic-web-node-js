@@ -64,7 +64,8 @@
         <div class="container h-100">
             <div class="card h-100">
                 <div class="card-header border-0 shadow">
-                    <label for="">Room Name</label>
+                    <button class="btn btn-sm btn-secondary" id="back-button">Back</button>
+                    <label for="" id="room-name">Room Name</label>
                 </div>
                 <div class="card-body p-0" style="overflow-x: hidden; overflow-y:auto;">
                     <div class="message-container bg-white">
@@ -142,10 +143,12 @@
         var user = new User()
 
         var socket
-        var channel = "chatroom"
-
+        var channel = ""
 
         document.addEventListener("DOMContentLoaded", function () {
+
+            channel = getURLParameter("ch")
+            document.querySelector("#room-name").innerHTML = ""
 
             if (!user.isLogIn()) {
                 window.location.href = "/login"
@@ -161,9 +164,14 @@
 
             // add html element event listener
             document.querySelector("#send-message-button").addEventListener("click", sendMessage)
-
+            document.querySelector("#back-button").addEventListener("click", back)
 
         })
+
+        function back() {
+            socket.emit("unsubscribe", channel)
+            history.back()
+        }
 
         async function getUserData() {
             let res = await database.httpRequest("POST", "/me", { "token": user.getToken() })
@@ -189,8 +197,9 @@
             // socket connected
             socket.on('connect', onConnected);
             socket.on('online users', userOnline);
-
             socket.on('receive_message', onReceiveMessage);
+
+            socket.emit("subscribe", user, channel)
         }
 
 
@@ -215,13 +224,13 @@
             let messageBox = document.createElement("div")
             messageBox.setAttribute("class", "message-box")
 
-            if (event.id == socket.id) {
+            if (event.sender_id == user.uuid) {
                 messageBox.classList.add("self")
             }
 
             let displayname = document.createElement("label")
             displayname.setAttribute("class", "displayname")
-            displayname.innerHTML = event.id
+            displayname.innerHTML = event.sender.firstname + " " + event.sender.lastname
 
             let content = document.createElement("div")
             content.setAttribute("class", "content")
@@ -252,13 +261,13 @@
 
             let messageObj =
             {
-                "id": socket.id,
-                "name": socket.displayname,
+                "sender_id": user.uuid,
+                "sender": user,
                 "content": messageContent,
                 "time": eventTime
             }
 
-            socket.emit("publish_message", messageObj, (response) => {
+            socket.emit("publish_message", channel, messageObj, (response) => {
                 document.querySelector("#message").value = ""
             })
         }

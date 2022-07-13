@@ -62,7 +62,7 @@
     </nav>
     <div class="wrapper">
         <div class="container p-3">
-            <div class="room-container">
+            <div class="create-container">
                 <div class="card">
                     <div class="card-header">
                         Lobby
@@ -70,7 +70,7 @@
                                 aria-hidden="true"></i></span>
                     </div>
                     <div class="card-body">
-                        <form action="#" id="creat-room-form">
+                        <form action="#" id="create-room-form">
                             <label for="room-name">Room's name</label>
                             <input type="text" class="form-control mb-3" id="room-name" required>
                             <div class="form-group">
@@ -78,6 +78,20 @@
                                 <button class="btn btn-success d-none" id="join-room-button">Join</button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container p-3">
+            <div class="room-container">
+                <div class="card">
+                    <div class="card-header">
+                        Rooms
+                    </div>
+                    <div class="card-body">
+                        <div class="row room-list">
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -120,9 +134,10 @@
             getUserData()
             initializeSocket()
 
-            document.querySelector("#create-room-button").addEventListener("click", createRoom)
+            document.querySelector("#create-room-form").addEventListener("submit", createRoom)
             document.querySelector("#join-room-button").addEventListener("click", joinRoom)
         })
+
 
         async function initializeSocket() {
 
@@ -131,6 +146,8 @@
             socket = io.connect()
             socket.on("connect", onConnected)
             socket.on("online_users", onlineUsers)
+            socket.on("online_rooms", onlineRooms)
+            socket.on("create_room", onCreateRoom)
 
         }
 
@@ -157,20 +174,66 @@
             document.querySelector("#online-users").innerHTML = event
         }
 
+        function onlineRooms(event) {
+
+            console.log(event)
+
+            let room = event.room
+
+            let parent = document.querySelector(".room-list")
+
+            let col = document.createElement("div")
+            col.setAttribute("class", "col-12 col-md-6 col-lg-3 mb-3")
+
+            let card = document.createElement("div")
+            card.setAttribute("class", "card h-100")
+
+            let cardHeader = document.createElement("div")
+            cardHeader.setAttribute("class", "card-header text-center p-0")
+            cardHeader.innerHTML = `<small>${room.name}</small>`
+
+            let cardBody = document.createElement("div")
+            cardBody.setAttribute("class", "card-body text-center p-0")
+
+            let onlineUserContainer = document.createElement("small")
+            let onlineUser = document.createElement("span")
+            onlineUser.setAttribute("class", "me-3")
+            onlineUser.setAttribute("id", "online-user-" + event.channel)
+            onlineUser.innerHTML = 0
+            let userIcon = document.createElement("i")
+            userIcon.setAttribute("class", "fa fa-user")
+
+            onlineUserContainer.append(onlineUser, userIcon)
+
+            let joinButton = document.createElement("button")
+            joinButton.setAttribute("class", "btn btn-success btn-sm w-100")
+            joinButton.setAttribute("onclick", "joinRoom('" + event.channel + "')")
+            joinButton.innerHTML = "Join"
+
+            cardBody.append(onlineUserContainer, joinButton)
+
+            card.append(cardHeader, cardBody)
+            col.append(card)
+            parent.append(col)
+
+        }
+
+        function onCreateRoom(event) {
+            window.location.href = "/chatroom/chat?ch=" + event.channel
+        }
+
         function createRoom() {
             let roomname = document.querySelector("#room-name").value
 
             if (roomname == "" || roomname == undefined) return
 
-            socket.emit("create room", user, roomname)
+            socket.emit("create_room", user, roomname)
+
+            return false
         }
 
-        function joinRoom() {
-            let roomname = document.querySelector("#room-name").value
-
-            if (roomname == "" || roomname == undefined) return
-            console.log("join " + roomname)
-
+        function joinRoom(channel) {
+            window.location.href = "/chatroom/chat?ch=" + channel
         }
 
     </script>

@@ -115,15 +115,15 @@ app.post('/me', (req, res, next) => {
 
         let data = payload['data']
         let user_id = data['id']
-        
+
         let sql = `SELECT * FROM users WHERE id = ?`
         let values = [user_id]
-        
-        con.query(sql, values, (err, result) => { 
-            res.json({ "status": "success", "message": "get self data successfully.", "data": result[0]})
+
+        con.query(sql, values, (err, result) => {
+            res.json({ "status": "success", "message": "get self data successfully.", "data": result[0] })
         })
 
-        
+
 
     } catch (err) {
         res.json({ status: "error", messege: err.message })
@@ -203,26 +203,33 @@ io.on('connection', (client) => {
 
         // check room exist
         let r = rooms.find(item => item.channel == channel)
+        let action = ""
 
         if (r != undefined) {
+            action = "join"
 
-            // check user already join
-            if (r.clients.find(item => item.uuid == user.uuid) == undefined) {
+            if (r.clients.length != 0) {
+                // check user already join
+                if (r.clients.find(item => item.uuid == user.uuid) == undefined) {
+                    r.clients.push(user)
+                }
+            } else {
                 r.clients.push(user)
             }
 
             // send broadcast number of users in this channel
             io.in(channel).emit('online_users', r.clients.length);
 
-            console.log("client id: " + client.id + " join the channel: " + channel)
-
         } else {
+            action = "create"
+
             // create room and join the room
             let room_id = uuid.v4()
             let newroom = {
                 "id": room_id,
                 "channel": channel,
                 "name": channel,
+                "owner": user,
                 "clients": []
             }
 
@@ -231,9 +238,9 @@ io.on('connection', (client) => {
 
             // send number of users in this channel to client who create the channel
             client.emit('online_users', 1);
-
-            console.log("client id: " + client.id + " create the room: " + channel)
         }
+
+        console.log("client id: " + client.id + " " + action + " the room: " + channel)
     })
 
     // leave channel
@@ -245,12 +252,7 @@ io.on('connection', (client) => {
 
     })
 
-    client.on("join lobby", (user) => {
-        client.id = user.uuid
-        users.push(user)
-    })
-
-    client.on("users", (room) => {
+    client.on("online_users", (room) => {
 
         let r = rooms.find(item => item.name == room)
 
@@ -261,26 +263,34 @@ io.on('connection', (client) => {
         }
     })
 
-    client.on("create room", (user, roomName) => {
+    client.on("create_room", (user, name) => {
+
         let room = {
-            "name": roomName,
-            "users": [user]
+            "id": user.uuid,
+            "channel": user.uuid,
+            "name": name,
+            "owner": user,
+            "clients": [user]
         }
 
         rooms.push(room)
-        client.join(roomName)
-        io.sockets.in(roomName).emit('create room', "Room " + roomName + " has created by " + user.firstname + " " + user.lastname);
+        client.join(room.channel)
+
+        let event = { "status": "success", "channel": room.channel, "room": room }
+
+        client.emit("create_room", event)
+        client.broadcast.to("lobby").emit('online_rooms', event);
 
         // ## console log event ## //
-        console.log("Room " + roomName + " has created by " + user.firstname + " " + user.lastname);
+        console.log("Room " + name + " has created by " + user.firstname + " " + user.lastname);
     })
 
-    client.on("join room", (user, roomName) => {
+    client.on("join room", (user, name) => {
 
     })
 
-    client.on("publish_message", (event, callback) => {
-        io.sockets.emit("receive_message", event)
+    client.on("publish_message", (channel, event, callback) => {
+        io.in(channel).emit('receive_message', event);
         callback({ "status": "success", "content": event })
     })
 
