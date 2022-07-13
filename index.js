@@ -15,9 +15,13 @@ const saltRounds = 10;
 const jwt = require("jsonwebtoken")
 const secret = "basic-web"
 
+
+app.use(cors)
 app.use(express.static(__dirname + '/public'))
 app.use(bodyParser.urlencoded({ extended: true })) // to support URL-encoded bodies
 app.use(express.json()) //to support JSON-encoded bodies
+
+
 
 // ## create database connection ## //
 var con = mysql.createConnection({
