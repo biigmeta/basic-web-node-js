@@ -11,10 +11,13 @@ const uuid = require('uuid')
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+// ## json web token ## //
+const jwt = require("jsonwebtoken")
+const secret = "basic-web"
+
 app.use(express.static(__dirname + '/public'))
 app.use(bodyParser.urlencoded({ extended: true })) // to support URL-encoded bodies
 app.use(express.json()) //to support JSON-encoded bodies
-// app.use(cors) // to support access from other domain
 
 // ## create database connection ## //
 var con = mysql.createConnection({
@@ -23,6 +26,9 @@ var con = mysql.createConnection({
     password: "",
     database: "metaverse_webservice"
 });
+
+
+/* =============================================== ROUTE ====================================================== */
 
 // initial route
 app.get('/', (req, res) => {
@@ -33,18 +39,26 @@ app.get('/register', (req, res) => {
     res.sendFile(__dirname + "/public/register.html")
 })
 
-app.get('/chat/lobby', (req, res) => {
-    res.sendFile(__dirname + "/public/chat-lobby.html")
+app.get('/login', (req, res) => {
+    res.sendFile(__dirname + "/public/login.html")
 })
 
-app.get('/chat/room', (req, res) => {
-    res.sendFile(__dirname + "/public/chat-room.html")
+app.get('/chatroom/lobby', (req, res) => {
+    res.sendFile(__dirname + "/public/chatroom/lobby.html")
 })
+
+app.get('/chatroom/chat', (req, res) => {
+    res.sendFile(__dirname + "/public/chatroom/chat.html")
+})
+
+/* =============================================== API ====================================================== */
 
 app.post('/register', (req, res, next) => {
 
+    // ## get post body data ## //
     let body = req.body
 
+    // ## assign variable ## //
     let email = body['email']
     let password = body['password']
     let firstname = body['firstname']
@@ -55,22 +69,113 @@ app.post('/register', (req, res, next) => {
     let displayname = firstname + " " + lastname
     let uid = uuid.v4()
 
+    // ## bind param ## //
     bcrypt.hash(password, saltRounds, (err, hash) => {
         let sql = `INSERT INTO users (uuid,email, password, firstname, lastname,displayname,picture,phone,gender) VALUES (?,?,?,?,?,?,?,?,?)`
         let values = [uid, email, hash, firstname, lastname, displayname, picture, phone, gender]
+
+        // ## query ## //
         con.query(sql, values, (err, result) => {
+
             if (err) {
                 res.json({ "status": "error", "message": err.sqlMessage })
                 return
             }
-            
+
             res.json({ "status": "success", "message": "register successfully.", "data": result })
         })
     })
+})
 
+app.post('/me', (req, res, next) => {
+
+    // ## get post body data ## //
+    let body = req.body
+
+    // ## assign variable ## //
+    let token = body['token']
+
+    try {
+
+        let decoded = jwt.verify(token, secret)
+        let payload = decoded['payload']
+
+        let exp = payload['exp']
+        let now = new Date()
+
+        let check_exp_token = false
+
+        if (now > exp && check_exp_token) {
+            res.json({ "status": "error", "message": "token time out." })
+            return
+        }
+
+        let data = payload['data']
+        res.json({ "status": "success", "message": "get self data successfully.", "data": data })
+
+    } catch (err) {
+        res.json({ status: "error", messege: err.message })
+    }
 
 })
 
+
+app.post('/login', (req, res, next) => {
+
+    // ## get post body data ## //
+    let body = req.body
+
+    // ## assign variable ## //
+    let email = body['email']
+    let password = body['password']
+
+    let sql = `SELECT * FROM users WHERE email = ?`
+    let values = [email]
+
+    con.query(sql, values, (err, result) => {
+
+        if (err) {
+            res.json({ "status": "error", "message": err.sqlMessage })
+            return
+        }
+
+        if (result.length == 0) {
+            res.json({ "status": "error", "message": "data not found." })
+            return
+        }
+
+        // ## check password ## //
+        bcrypt.compare(password, result[0]['password'], (err, corrected) => {
+
+            if (!corrected) {
+                res.json({ "status": "error", "message": "incorrect password." })
+                return
+            }
+
+            // ## unset password before return result
+            result.forEach(element => {
+                delete element['password']
+            });
+
+            // ## encode to jwt ## //
+            let expired_min = 15
+            let now = new Date()
+            let expired = new Date(new Date().setTime(new Date().getTime() + (1000 * 60 * expired_min)))
+
+            let payload = {
+                "data": result[0],
+                "exp": expired,
+                "iat": now
+            }
+
+            let token = jwt.sign({ payload }, secret)
+            res.json({ "status": "success", "message": "log in successfully.", "data": result[0], "token": token })
+        })
+    })
+})
+
+
+/* =============================================== SOCKET ====================================================== */
 
 let users = []
 let rooms = []
@@ -83,11 +188,17 @@ io.on('connection', (socket) => {
     socket.displayname = "anonymous"
 
     socket.on("join lobby", (user) => {
+        socket.id = user.uuid
         users.push(user)
     })
 
     socket.on("users", (room) => {
-        socket.emit('lobby users', users);
+        if(room == "lobby")
+        {
+            socket.emit('online users', users);
+        }else{
+            socket.emit('online users', users);
+        }
     })
 
     socket.on("create room", (user, roomName) => {
@@ -117,7 +228,7 @@ io.on('connection', (socket) => {
     // ## disconnect ## //
     socket.on('disconnect', () => {
         // ## find disconnected user from users ## //
-        let tempUser = users.find(item => item.id == socket.id)
+        let tempUser = users.find(item => item.uuid == socket.id)
         var index = users.indexOf(tempUser);
 
         if (index !== -1) {

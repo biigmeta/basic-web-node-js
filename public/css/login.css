@@ -1,38 +1,8 @@
-@font-face {
-    font-family: 'prompt-md';
-    src: url('../fonts/Prompt/Prompt-Medium.ttf');
-}
-
-* {
-    border-radius: 0px !important;
-}
-
 body {
-    font-family: 'prompt-md', sans-serif;
     padding: 0;
     margin: 0;
-    height: 100vh;
+    height: 100vh !important;
     overflow: hidden;
-}
-
-.navbar{
-    z-index: 1;
-}
-
-.navbar-toggler:focus {
-    box-shadow: none;
-}
-
-.navbar-toggler-icon {
-    font-size: 0.5rem;
-}
-
-.dropdown img {
-    max-width: 32px;
-    width: 32px;
-    border-radius: 50px;
-    object-position: center;
-    object-fit: cover;
 }
 
 .wrapper {
@@ -41,7 +11,6 @@ body {
     overflow-x: hidden;
     overflow-y: auto;
     justify-content: center;
-    padding-top: 56px;
 
     background: rgb(131, 58, 180);
     background: -moz-linear-gradient(90deg, rgba(131, 58, 180, 1) 0%, rgba(29, 90, 253, 1) 50%, rgba(69, 223, 252, 1) 100%);

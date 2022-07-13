@@ -3,12 +3,20 @@
     src: url('../fonts/Prompt/Prompt-Medium.ttf');
 }
 
+* {
+    border-radius: 0px !important;
+}
+
 body {
     font-family: 'prompt-md', sans-serif;
     padding: 0;
     margin: 0;
     height: 100vh;
     overflow: hidden;
+}
+
+.navbar{
+    z-index: 1;
 }
 
 .navbar-toggler-icon {
@@ -30,14 +38,17 @@ body {
 
 .wrapper {
     display: flex;
-    height: calc(100vh - 56px);
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
     justify-content: center;
+    padding-top: 56px;
 
-    background: rgb(220, 255, 255);
-    background: -moz-radial-gradient(circle, rgba(220, 255, 255, 1) 0%, rgba(160, 203, 255, 1) 100%);
-    background: -webkit-radial-gradient(circle, rgba(220, 255, 255, 1) 0%, rgba(160, 203, 255, 1) 100%);
-    background: radial-gradient(circle, rgba(220, 255, 255, 1) 0%, rgba(160, 203, 255, 1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#dcffff", endColorstr="#a0cbff", GradientType=1);
+    background: rgb(131, 58, 180);
+    background: -moz-linear-gradient(90deg, rgba(131, 58, 180, 1) 0%, rgba(29, 90, 253, 1) 50%, rgba(69, 223, 252, 1) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(131, 58, 180, 1) 0%, rgba(29, 90, 253, 1) 50%, rgba(69, 223, 252, 1) 100%);
+    background: linear-gradient(90deg, rgba(131, 58, 180, 1) 0%, rgba(29, 90, 253, 1) 50%, rgba(69, 223, 252, 1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#833ab4", endColorstr="#45dffc", GradientType=1);
 }
 
 .message-container {
@@ -89,4 +100,8 @@ body {
 
 .message-box.self .content .time {
     right: 0px;
+}
+
+* {
+    border-radius: 0;
 }

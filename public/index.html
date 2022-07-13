@@ -14,9 +14,8 @@
     <link rel="stylesheet" href="/css/index.css">
 </head>
 
-<body>
-
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
+<body class="d-none">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light position-fixed top-0 start-0 w-100 shadow">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Web Basic</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -30,7 +29,7 @@
                         <a class="nav-link active" aria-current="page" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/chat/room">Chatroom</a>
+                        <a class="nav-link" href="/chatroom/lobby">Chat Room</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Game</a>
@@ -41,14 +40,15 @@
                 </ul>
                 <ul class="navbar-nav mb-2 ms-0 ms-md-3 mb-lg-0">
                     <li class="nav-item dropdown">
-                        <a class="" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="https://www.dailynews.co.th/admin/upload/20190607/news_kcAAzDavqh182844_533.jpg"
-                                alt="">
+                        <a class="text-decoration-none text-dark" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <img src="" alt="" id="user-profile-image">
+                            <span id="user-fullname">Fullname</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="">
                             <li><a class="dropdown-item" href="#">Profile</a></li>
                             <li><a class="dropdown-item" href="#">My Activity</a></li>
-                            <li><a class="dropdown-item" href="#">Log out</a></li>
+                            <li><a class="dropdown-item" href="#" id="log-out-button">Log out</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -56,16 +56,64 @@
         </div>
     </nav>
     <div class="wrapper">
-        <div class="container">
+        <div class="container p-3">
             <div class="card">
-                <div class="card-header">
-                    API ROUTE TESTING
-                </div>
                 <div class="card-body">
-                    <div class="form-group">
-                        <label for=""></label>
-                        <button class="btn btn-primary" onclick="register()">REGISTER</button>
-                    </div>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas consectetur id fugit cum, quis nam
+                    animi. Impedit aperiam natus accusamus! Alias architecto in illum eius nostrum error recusandae
+                    perferendis odio doloribus dignissimos fuga doloremque nam ipsam quam consequatur enim excepturi et
+                    culpa, iusto sequi dolores! Maiores quibusdam rem amet delectus architecto quisquam quaerat harum et
+                    dolor reiciendis consequatur corrupti modi in officia voluptate vel, voluptatibus repellat.
+                    Architecto earum qui voluptas! Expedita, ipsam doloremque consectetur nisi consequatur assumenda
+                    fugit eligendi temporibus odio fuga vel, repellat ipsa eius nulla esse? Officia temporibus ipsum, ea
+                    enim consequuntur repellendus dolorem eaque beatae esse cum? Dolorum deleniti enim ratione modi,
+                    voluptatibus soluta esse quibusdam et consequatur ipsa facilis nihil. Enim sequi magnam eius, in
+                    praesentium ipsam cupiditate, expedita ullam possimus perferendis corporis non voluptatem suscipit
+                    totam quis quidem incidunt consequuntur, culpa repellendus velit deleniti assumenda est. Ipsum sint
+                    optio dolorum ipsa? Cum nam tenetur facilis enim amet magnam dolore ducimus iure cumque omnis
+                    inventore praesentium doloremque nesciunt consequuntur doloribus, harum error possimus nobis quaerat
+                    vitae officiis dolor dolores tempore velit! Tenetur corrupti, nam error maxime sit blanditiis
+                    adipisci commodi amet quas tempore esse ea, assumenda nisi nobis odit modi similique inventore illo
+                    soluta officiis neque!
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos nesciunt magni obcaecati, iste velit
+                    optio minima eligendi ab cum et quia. Magnam blanditiis dicta dolores similique quibusdam facilis
+                    maiores pariatur rem atque, in, modi eaque ipsa voluptatibus tempora. Labore vero unde vitae neque
+                    consequatur eveniet consectetur tempora fugiat consequuntur laborum ab nam repellendus, dolorem rem
+                    incidunt deleniti quo ratione quaerat. Alias deleniti explicabo eum repellendus sunt inventore
+                    eligendi. Doloribus perferendis, odio blanditiis at amet numquam quis magni, nisi corrupti velit cum
+                    officia quae quibusdam ratione. Dolorem sequi nesciunt voluptate minima vitae eveniet ullam commodi
+                    cupiditate nemo voluptatem molestias asperiores nisi dolore culpa, maxime neque in vel reprehenderit
+                    accusamus sit, alias sed modi recusandae voluptatibus! Qui voluptatum eos, earum nulla optio,
+                    ducimus temporibus, id excepturi autem et maiores! Dicta soluta fugiat modi ea totam maiores vel
+                    sapiente quasi ut officia, voluptatem pariatur cumque error maxime eligendi quod accusantium iste
+                    facilis minima, fuga earum voluptates? Hic quaerat eligendi suscipit expedita autem, quae, quam,
+                    corporis sequi neque repellat accusamus unde eos? Consectetur perspiciatis debitis, doloribus
+                    consequatur iste dignissimos ipsum at modi autem cupiditate deleniti similique et necessitatibus
+                    neque aut eum nesciunt beatae vero eius impedit! Et, eum tempora provident sequi asperiores
+                    perspiciatis veniam corrupti quos, quod voluptatibus sed natus. Enim vitae assumenda accusamus
+                    tempore dolore, quidem nobis corrupti iure eius incidunt vero repellat quisquam consequatur ipsa
+                    quam et impedit dolores voluptatibus asperiores omnis odit? Ullam dignissimos officia quod dolorum
+                    veritatis quia inventore recusandae, cumque culpa similique ratione laudantium! Totam omnis ipsa
+                    vero qui quidem optio porro exercitationem doloribus consectetur. Architecto blanditiis eaque
+                    tempore sint non? Sint eos harum amet suscipit accusamus distinctio praesentium quaerat dolore illo
+                    ipsam delectus veritatis ullam at, consequatur modi est commodi nostrum, eveniet tenetur! Beatae
+                    vitae, minima odio, aspernatur quidem suscipit maxime quas debitis culpa sit optio ratione iure. Ex
+                    modi debitis ullam optio beatae. Fugit fuga corrupti ipsum voluptatum pariatur et, excepturi
+                    voluptas voluptates beatae eum dicta? At nihil dolorum sequi ab eum! Nemo earum vitae sapiente,
+                    cumque eum corrupti soluta vero voluptatum consequatur nihil magni, excepturi sed laboriosam iusto!
+                    Exercitationem veritatis, optio laborum necessitatibus aliquid atque! Eum architecto dolores impedit
+                    ipsa, sapiente corporis asperiores fugit facilis mollitia magnam quae quaerat? Commodi, aperiam esse
+                    aliquam minima praesentium ipsam repudiandae voluptas maiores? Impedit, commodi excepturi officia
+                    autem laborum, corporis explicabo dolorem ratione libero dignissimos officiis minima odio aut,
+                    obcaecati adipisci. Rerum nostrum inventore repellat, explicabo at reiciendis laborum officiis
+                    quidem, sunt quam porro! Possimus quam, minima laborum velit maxime praesentium architecto expedita
+                    ipsa magnam quas repellat ad officia, sit ex obcaecati, iure nobis laudantium rem voluptatem impedit
+                    maiores vitae iusto ipsam sequi! Veritatis similique eveniet voluptatibus reiciendis minus voluptate
+                    consectetur temporibus, et ad aliquam nisi rerum eligendi id cum doloribus nostrum dignissimos ut.
+                    Impedit dicta inventore pariatur animi quisquam dolorum eligendi vero saepe, possimus obcaecati
+                    delectus ullam, autem, eius aliquam? Eum facilis incidunt quibusdam quasi accusantium cumque
+                    doloribus quisquam quas asperiores non quis iusto, quidem rerum illum ea veniam minima ullam
+                    excepturi nulla eius vel quae reiciendis! Quasi, recusandae!
                 </div>
             </div>
         </div>
@@ -83,48 +131,63 @@
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
         crossorigin="anonymous"></script>
 
+    <!-- sweet alert -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script src="/socket.io/socket.io.js"></script>
 
     <!-- custom javascript -->
-    <script src="js/user.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/database.js"></script>
-
+    <script src="/js/main.js"></script>
+    <script src="/js/database.js"></script>
+    <script src="/js/user.js"></script>
 
     <script>
 
+        var database = new Database()
         var user = new User()
-        var users = []
 
         $(() => {
-            $.ajax({
-                url: 'https://randomuser.me/api/?results=50',
-                dataType: 'json',
-                success: function (data) {
-                    users = data.results
-                }
-            });
-        })
 
-        async function register() {
-            let random = Math.floor(Math.random() * 50)
-
-            let form = {
-                "email": users[random]['email'],
-                "username": users[random]['login']['username'],
-                "password": "123456",
-                "firstname": users[random]['name']['first'],
-                "lastname": users[random]['name']['last'],
-                "picture": users[random]['picture']['large'],
-                "gender": users[random]['gender'],
-                "phone": users[random]['phone']
+            if (!user.isLogIn()) {
+                window.location.href = "/login"
+                return
             }
 
-            $.post("/register", form, function (res) {
-                console.log(res)
+            getUserData()
+
+            // ## display index
+            document.querySelector("body").classList.remove("d-none")
+
+            // ## add event listener ## //
+            document.querySelector("#log-out-button").addEventListener("click", logout)
+        })
+
+        function logout() {
+            Swal.fire({
+                icon: "question",
+                title: "",
+                html: `<p class="">Do you want to log out?</p>`,
+                showCancelButton: true
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    user.logout()
+                    window.location.reload()
+                }
             })
         }
 
+        async function getUserData() {
+            let res = await database.httpRequest("POST", "/me", { "token": user.getToken() })
+            if (res.status == "success" || res.status == "ok") {
+                user.setData(res.data)
+                displayUserData()
+            }
+        }
+
+        function displayUserData() {
+            document.querySelector("#user-profile-image").setAttribute("src", user.picture)
+            document.querySelector("#user-fullname").innerHTML = user.firstname + " " + user.lastname
+        }
 
     </script>
 </body>

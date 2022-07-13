@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Log In</title>
 
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="/css/register.css">
+    <link rel="stylesheet" href="/css/login.css">
     <style>
         .register-container {
             display: flex;
@@ -46,6 +46,7 @@
             overflow-x: hidden;
             overflow-y: auto;
         }
+
 
         .optional::after {
             content: ' (optional) ';
@@ -95,68 +96,35 @@
 </head>
 
 <body>
+
     <div class="wrapper">
         <div class="register-container w-75 h-75">
             <div class="banner-container h-100">
-                <img src="https://images.unsplash.com/photo-1535223289827-42f1e9919769?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
+                <img src="https://images.unsplash.com/photo-1593508512255-86ab42a8e620?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=878&q=80"
                     alt="Banner Image" class="w-100">
             </div>
             <div class="input-container h-100">
                 <div class="card">
                     <div class="card-header bg-white shadow">
-                        <h5 class="text-center">Registration</h5>
+                        <h5 class="text-center">Log In</h5>
                     </div>
                     <div class="card-body p-3">
-                        <form action="#" onsubmit="return false" class="mb-3" id="register-form">
+                        <form action="#" onsubmit="return false" class="mb-3" id="log-in-form">
                             <div class="mb-3">
                                 <label for="email" class="">Email address</label>
-                                <input type="email" class="form-control form-control-sm" id="email"
-                                    aria-describedby="email-help" required>
-                                <div id="email-help" class="form-text">We'll never share your email with anyone else.
-                                </div>
+                                <input type="email" class="form-control form-control-sm" id="email" required>
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="">Password</label>
                                 <input type="password" class="form-control form-control-sm" id="password" required>
                             </div>
-                            <div class="mb-3">
-                                <label for="confirm-password" class="">Confirm Password</label>
-                                <input type="password" class="form-control form-control-sm" id="confirm-password"
-                                    required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="firstname" class="">First Name</label>
-                                <input type="text" class="form-control form-control-sm" id="firstname" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="lastname" class="">Last Name</label>
-                                <input type="text" class="form-control form-control-sm" id="lastname" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="phone" class="optional">Phone</label>
-                                <input type="text" class="form-control form-control-sm" id="phone">
-                                <small class="form-text">(Ex: 0888888888)</small>
-                            </div>
-                            <div class="mb-3">
-                                <label for="phone" class="">Gender</label>
-                                <select name="" id="gender" class="form-control form-control-sm" required>
-                                    <option value="" disabled selected>Select Gender</option>
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                    <option value="not-applicable">Not applicable</option>
-                                </select>
-                            </div>
-                            <div class="mb-5 form-check">
-                                <input type="checkbox" class="form-check-input" id="terms-and-conditions" required>
-                                <label class="form-check-label" for="terms-and-conditions">
-                                    I am 13 years of age or older and agree to the terms and conditions
-                                    <span><a href="#">Terms And Conditions</a></span>
-                                </label>
-
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-sm w-100">Register</button>
+                            <button type="submit" class="btn btn-primary btn-sm w-100">Log In</button>
                         </form>
-                        <label><span><a href="/login" class="text-decoration-none form-text">Already have an account.</a></span></label><br>
+                        <label><span><a href="/register" class="text-decoration-none form-text">Forgot Your
+                                    Password?</a></span></label><br>
+                        <label><span><a href="/register" class="text-decoration-none form-text">Didn't have
+                                    account?</a></span></label>
+
                     </div>
                 </div>
             </div>
@@ -181,52 +149,46 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/main.js"></script>
     <script src="/js/database.js"></script>
+    <script src="/js/user.js"></script>
+
 
     <script>
 
         var database = new Database()
+        var user = new User()
 
         document.addEventListener("DOMContentLoaded", function () {
-            document.querySelector("#register-form").addEventListener("submit", register)
+            document.querySelector("#log-in-form").addEventListener("submit", login)
+
+            console.log(user)
+            console.log(user.isLogIn())
         })
 
-        async function register(event) {
+        async function login(event) {
+
             event.preventDefault()
 
             let email = document.querySelector("#email").value
             let password = document.querySelector("#password").value
-            let confirm_password = document.querySelector("#confirm-password").value
-            let firstname = document.querySelector("#firstname").value
-            let lastname = document.querySelector("#lastname").value
-            let phone = document.querySelector("#phone").value
-            let gender = document.querySelector("#gender").value
-
 
             let form = {
                 "email": email,
                 "password": password,
-                "firstname": firstname,
-                "lastname": lastname,
-                "phone": phone,
-                "gender": gender,
-                "picture": ""
             }
 
-            let res = await database.httpRequest("POST", "/register", form)
+            let res = await database.httpRequest("POST", "/login", form)
 
             if (res.status == "success" || res.status == "ok") {
-                Swal.fire({
-                    icon: "success",
-                    title: "Success",
-                    html: `<p class="text-capitalize">${res.message}</p>`
-                }).then(function (result) {
-                    window.location.href = "/"
-                })
+
+                user.setToken(res.token)
+                window.location.href = "/"
+               
             } else {
                 Swal.fire({
                     icon: "error",
                     title: "Error",
-                    html: `<p class="text-capitalize">${res.message}</p>`
+                    html: `<p class="text-capitalize">${res.message}</p>`,
+                    heightAuto: false,
                 })
             }
 

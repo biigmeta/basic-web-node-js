@@ -12,12 +12,13 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <link rel="stylesheet" href="/css/chat-lobby.css">
+
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light position-fixed top-0 start-0 w-100 shadow">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">NodeJS</a>
+            <a class="navbar-brand" href="/">Web Basic</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -26,10 +27,10 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="/">Home</a>
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="/chatroom">Chatroom</a>
+                        <a class="nav-link" href="/chatroom/lobby">Chat Room</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Game</a>
@@ -42,13 +43,13 @@
                     <li class="nav-item dropdown">
                         <a class="text-decoration-none text-dark" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
-                            <img src="/images/user-default-icon.jpg" alt="" id="user-profile-image">
-                            <span id="user-fullname">Firstname Lastname</span>
+                            <img src="" alt="" id="user-profile-image">
+                            <span id="user-fullname">Fullname</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="">
                             <li><a class="dropdown-item" href="#">Profile</a></li>
                             <li><a class="dropdown-item" href="#">My Activity</a></li>
-                            <li><a class="dropdown-item" href="#">Log out</a></li>
+                            <li><a class="dropdown-item" href="#" id="log-out-button">Log out</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -56,17 +57,19 @@
         </div>
     </nav>
     <div class="wrapper">
-        <div class="room-container">
-            <div class="card">
-                <div class="card-header">
-                    Lobby
-                </div>
-                <div class="card-body">
-                    <label for="room-name">Room's name</label>
-                    <input type="text" class="form-control mb-3" id="room-name">
-                    <div class="form-group">
-                        <button class="btn btn-primary" id="create-room-button">Create</button>
-                        <button class="btn btn-success" id="join-room-button">Join</button>
+        <div class="container">
+            <div class="room-container">
+                <div class="card">
+                    <div class="card-header">
+                        Lobby
+                    </div>
+                    <div class="card-body">
+                        <label for="room-name">Room's name</label>
+                        <input type="text" class="form-control mb-3" id="room-name">
+                        <div class="form-group">
+                            <button class="btn btn-primary" id="create-room-button">Create</button>
+                            <button class="btn btn-success" id="join-room-button">Join</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -86,68 +89,79 @@
         crossorigin="anonymous"></script>
 
     <script src="/socket.io/socket.io.js"></script>
+
+    <!-- custom script -->
     <script src="/js/main.js"></script>
+    <script src="/js/database.js"></script>
+    <script src="/js/user.js"></script>
 
     <script>
+        var database = new Database()
+        var user = new User()
 
         var socket
         var channel = "lobby"
-        var user = {}
+
 
         document.addEventListener("DOMContentLoaded", function () {
 
-            // ## get random user info data ## //
-            $.ajax({
-                url: 'https://randomuser.me/api/',
-                dataType: 'json',
-                success: function (data) {
+            if (!user.isLogIn()) {
+                window.location.href = "/login"
+                return;
+            }
 
-                    // console.log(data.results[0])
-
-                    result = data.results[0];
-
-                    user.firstname = result.name.first
-                    user.lastname = result.name.last
-                    user.picture = result.picture.medium
-                    user.gender = result.gender
-
-                    displayUserData()
-                }
-            });
-
-            socket = io.connect()
-
-            socket.on("connect", onConnected)
-            socket.on("online users", userOnline)
-            socket.on("online rooms", roomOnline)
-            socket.on("create room", onCreateRoom)
+            getUserData()
+            initializeSocket()
 
             document.querySelector("#create-room-button").addEventListener("click", createRoom)
             document.querySelector("#join-room-button").addEventListener("click", joinRoom)
         })
+
+        async function initializeSocket() {
+
+            await waitUntil(() => user.id != "", 10000)
+            
+            socket = io.connect()
+
+            socket.on("connect", onConnected)
+            socket.on("online users", userOnline)
+            socket.on("create room", onCreateRoom)
+        }
+
+        async function getUserData() {
+            let res = await database.httpRequest("POST", "/me", { "token": user.getToken() })
+
+            if (res.status == "success" || res.status == "ok") {
+                user.setData(res.data)
+                displayUserData()
+            }
+        }
 
         function displayUserData() {
             document.querySelector("#user-profile-image").setAttribute("src", user.picture)
             document.querySelector("#user-fullname").innerHTML = user.firstname + " " + user.lastname
         }
 
-        function onConnected(event) {
-           
-            user.uuid = socket.id
-            console.log(user)
+        function onConnected() {
+            socket.id = user.uuid
+
+            // join the lobby
             socket.emit("join lobby", user)
+
+            // get online users
+            socket.emit("users", channel)
         }
 
         function userOnline(event) {
-            // console.log(event)
-        }
-
-        function roomOnline(event) {
             console.log(event)
         }
 
+        function roomOnline(event) {
+            // console.log(event)
+        }
+
         function onCreateRoom(event) {
-            console.log(event);
+            // console.log(event);
         }
 
         function createRoom() {

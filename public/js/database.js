@@ -7,6 +7,8 @@ class Database {
             var xhr = new XMLHttpRequest();
             xhr.open(method, apiService + route, true);
             xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.setRequestHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            xhr.setRequestHeader("Pragma", "no-cache");
 
             xhr.onload = function () {
                 try {
