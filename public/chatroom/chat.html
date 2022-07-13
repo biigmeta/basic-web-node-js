@@ -169,7 +169,7 @@
         })
 
         function back() {
-            socket.emit("unsubscribe", channel)
+            socket.emit("unsubscribe", user, channel)
             history.back()
         }
 

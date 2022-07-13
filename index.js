@@ -244,8 +244,9 @@ io.on('connection', (client) => {
     })
 
     // leave channel
-    client.on("unsubscribe", (room) => {
-        client.leave(room)
+    client.on("unsubscribe", (user, channel) => {
+        
+        client.leave(channel)
     })
 
     client.on("unsubscribe_all", () => {
