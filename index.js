@@ -21,10 +21,10 @@ app.use(express.json()) //to support JSON-encoded bodies
 
 // ## create database connection ## //
 var con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "metaverse_webservice"
+    host: "awsdemo.cmn3ors2efis.ap-southeast-1.rds.amazonaws.com",
+    user: "admin",
+    password: "12345678",
+    database: "biig_chat_app"
 });
 
 
@@ -180,53 +180,95 @@ app.post('/login', (req, res, next) => {
 let users = []
 let rooms = []
 
-io.on('connection', (socket) => {
+io.on('connection', (client) => {
+    console.log(client.id + " connected");
 
-    console.log(socket.id + " connected");
+    client.on("init_id", (id) => {
+        client.id = id
+    })
 
-    // set first time user display name
-    socket.displayname = "anonymous"
+    // join channel
+    client.on("subscribe", (room) => {
+        client.join(room)
 
-    socket.on("join lobby", (user) => {
-        socket.id = user.uuid
+        // check room exist
+        let r = rooms.find(item => item.name == room)
+        if (r != undefined) {
+            // join the room
+            // check user already join
+            if(!r.clients.includes(client.id)){
+                r.clients.push(client.id)
+            }
+
+            console.log("client id: " + client.id + " join the room: " + room)
+        } else {
+            // create room and join the room
+            let room_id = uuid.v4()
+            let newroom = {
+                "id": room_id,
+                "name": room,
+                "clients": []
+            }
+            newroom.clients.push(client.id)
+            rooms.push(newroom)
+
+            console.log("client id: " + client.id + " create the room: " + room)
+        }
+
+
+    })
+
+    // leave channel
+    client.on("unsubscribe", (room) => {
+        client.leave(room)
+    })
+
+    client.on("unsubscribe_all", () => {
+
+    })
+
+    client.on("join lobby", (user) => {
+        client.id = user.uuid
         users.push(user)
     })
 
-    socket.on("users", (room) => {
-        if(room == "lobby")
-        {
-            socket.emit('online users', users);
-        }else{
-            socket.emit('online users', users);
+    client.on("users", (room) => {
+
+        let r = rooms.find(item => item.name == room)
+
+        if (r == undefined) {
+            client.emit('online_users', 0)
+        } else {
+            client.emit('online_users', r.clients.length)
         }
     })
 
-    socket.on("create room", (user, roomName) => {
+    client.on("create room", (user, roomName) => {
         let room = {
             "name": roomName,
             "users": [user]
         }
 
         rooms.push(room)
-        socket.join(roomName)
+        client.join(roomName)
         io.sockets.in(roomName).emit('create room', "Room " + roomName + " has created by " + user.firstname + " " + user.lastname);
 
         // ## console log event ## //
         console.log("Room " + roomName + " has created by " + user.firstname + " " + user.lastname);
     })
 
-    socket.on("join room", (user, roomName) => {
-        // rooms[roomName].users.push(users)
+    client.on("join room", (user, roomName) => {
+
     })
 
-    socket.on("publish_message", (event, callback) => {
+    client.on("publish_message", (event, callback) => {
         io.sockets.emit("receive_message", event)
         callback({ "status": "success", "content": event })
     })
 
 
     // ## disconnect ## //
-    socket.on('disconnect', () => {
+    client.on('disconnect', () => {
         // ## find disconnected user from users ## //
         let tempUser = users.find(item => item.uuid == socket.id)
         var index = users.indexOf(tempUser);
@@ -240,7 +282,7 @@ io.on('connection', (socket) => {
 
         }
         // ## console log event ## //
-        console.log(socket.id + " disconnected")
+        console.log(client.id + " disconnected")
     });
 });
 

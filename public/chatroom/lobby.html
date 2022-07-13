@@ -120,12 +120,10 @@
         async function initializeSocket() {
 
             await waitUntil(() => user.id != "", 10000)
-            
-            socket = io.connect()
 
+            socket = io.connect()
             socket.on("connect", onConnected)
-            socket.on("online users", userOnline)
-            socket.on("create room", onCreateRoom)
+            socket.on("online_users", onlineUsers)
         }
 
         async function getUserData() {
@@ -143,16 +141,16 @@
         }
 
         function onConnected() {
+            // init socket data
             socket.id = user.uuid
+            socket.emit("init_id", socket.id)
 
             // join the lobby
-            socket.emit("join lobby", user)
-
-            // get online users
+            socket.emit("subscribe", channel)
             socket.emit("users", channel)
         }
 
-        function userOnline(event) {
+        function onlineUsers(event) {
             console.log(event)
         }
 
