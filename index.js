@@ -317,7 +317,8 @@ io.on('connection', (client) => {
 
 
 // ## start server ## //
-var port = process.env.port || 3001
+// var port = process.env.port || 3001
+var port = 3001
 http.listen(port, function () {
     console.log(`start server on port ${port}`)
 })
